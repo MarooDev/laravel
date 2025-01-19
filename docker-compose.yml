@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+
+  laravel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    volumes:
+      - ./:/var/www/laravel
+      - ./php.ini:/usr/local/etc/php/php.ini
+      - ./node_modules:/var/www/laravel/node_modules
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    networks:
+      - laravel-network
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_CHARSET: utf8mb4
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "3307:3306"
+    networks:
+      - laravel-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+    ports:
+      - "8090:80"
+    depends_on:
+      - mysql
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
+
+volumes:
+  db_data:
