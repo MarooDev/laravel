@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <h1>List of pets</h1>
     <nav>
         <ul>
@@ -21,6 +26,11 @@
                 <td>
                     <a href="{{ route('pets.show', $pet['id']) }}">Details</a>
                     <a href="{{ route('pets.edit', $pet['id']) }}">Edit</a>
+                    <a href="#" onclick="event.preventDefault(); if(confirm('Are you sure you want to delete this pet?')) document.getElementById('delete-form-{{ $pet['id'] }}').submit();">Delete</a>
+                    <form id="delete-form-{{ $pet['id'] }}" action="{{ route('pets.destroy', $pet['id']) }}" method="POST" style="display: none;">
+                        @csrf
+                        @method('DELETE')
+                    </form>
                 </td>
             </tr>
         @endforeach

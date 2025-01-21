@@ -12,10 +12,15 @@ class PetController extends Controller {
     public function __construct(PetService $petService) {
         $this->petService = $petService;
     }
-
-    public function index() {
-        $pets = $this->petService->getAllPets();
-        return view('pets.index', compact('pets'));
+    public function index()
+    {
+        try {
+            $pets = $this->petService->getAllPets();
+            return view('pets.index', compact('pets'));
+        } catch (\Exception $e) {
+            \Log::error('Error fetching pets: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Unable to fetch pets. Please try again later.');
+        }
     }
 
     public function show($id)
@@ -37,8 +42,14 @@ class PetController extends Controller {
 
     public function create()
     {
-        return view('pets.create');
+        try {
+            return view('pets.create');
+        } catch (\Exception $e) {
+            \Log::error('Error loading create pet form: ' . $e->getMessage());
+            return redirect()->route('pets.index')->with('error', 'Unable to load the create pet form. Please try again later.');
+        }
     }
+
 
     public function store(Request $request)
     {
@@ -54,8 +65,6 @@ class PetController extends Controller {
             } else {
                 return back()->withErrors(['error' => 'Failed to add pet: ' . $response->body()]);
             }
-
-            return redirect()->back()->withErrors('An error occurred while adding the pet.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
         }
@@ -102,9 +111,19 @@ class PetController extends Controller {
         }
     }
 
+    public function destroy($id)
+    {
+        try {
+            $response = Http::delete("https://petstore.swagger.io/v2/pet/{$id}");
 
-    public function destroy($id) {
-        $this->petService->deletePet($id);
-        return redirect()->route('pets.index');
+            if ($response->successful()) {
+                return redirect()->route('pets.index')->with('success', 'Pet has been deleted successfully!');
+            } else {
+                return redirect()->back()->withErrors('An error occurred while deleting the pet: ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('An error occurred: ' . $e->getMessage());
+        }
     }
+
 }
