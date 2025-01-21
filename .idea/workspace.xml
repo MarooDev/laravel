@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="23947c01-13f7-4dc3-8edd-1d5e742bbbed" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/PetController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/PetController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/pets/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pets/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pets/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pets/show.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

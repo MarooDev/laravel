@@ -35,8 +35,6 @@ class PetController extends Controller {
     }
 
 
-
-
     public function create()
     {
         return view('pets.create');
@@ -64,17 +62,46 @@ class PetController extends Controller {
     }
 
 
-    public function edit($id) {
-        $pet = $this->petService->getPet($id);
-        return view('pets.edit', compact('pet'));
+    public function edit($id)
+    {
+        try {
+            $response = Http::get("https://petstore.swagger.io/v2/pet/{$id}");
+
+            if ($response->successful()) {
+                $pet = $response->json();
+                return view('pets.edit', compact('pet'));
+            } else {
+                return redirect()->route('pets.index')->with('error', 'Pet with the given ID not found');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('pets.index')->with('error', 'An error occurred while fetching data: ' . $e->getMessage());
+        }
     }
 
-    public function update(Request $request, $id) {
-        $data = $request->all();
-        $data['id'] = $id;
-        $this->petService->updatePet($data);
-        return redirect()->route('pets.index');
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'status' => 'required|in:available,pending,sold',
+        ]);
+
+        try {
+            $response = Http::put("https://petstore.swagger.io/v2/pet", [
+                'id' => $id,
+                'name' => $validatedData['name'],
+                'status' => $validatedData['status'],
+            ]);
+
+            if ($response->successful()) {
+                return redirect()->route('pets.index')->with('success', 'Pet has been updated successfully!');
+            } else {
+                return redirect()->back()->withErrors('An error occurred while updating the pet: ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('An error occurred: ' . $e->getMessage());
+        }
     }
+
 
     public function destroy($id) {
         $this->petService->deletePet($id);
