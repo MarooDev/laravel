@@ -18,3 +18,12 @@ This branch implements the functionality for displaying a list of pets fetched f
 Fetching data from the /pet endpoint of the API.
 Displaying the list of pets in a user-friendly manner.
 
+## Available Routes
+
+- List of pets: `/pets`
+- Pet details: `/pets/{id}`
+- Create new pet: `/pets/create`
+
+Note: Replace `{id}` in the pet details URL with the actual ID of the pet you want to view. For example: `/pets/9223372016900015388`
+
+To add a new pet, navigate to `/pets/create` and fill out the form with the pet's details.

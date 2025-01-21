@@ -37,14 +37,32 @@ class PetController extends Controller {
 
 
 
-    public function create() {
+    public function create()
+    {
         return view('pets.create');
     }
 
-    public function store(Request $request) {
-        $this->petService->addPet($request->all());
-        return redirect()->route('pets.index');
+    public function store(Request $request)
+    {
+        try {
+            $response = Http::post('https://petstore.swagger.io/v2/pet', [
+                'id' => rand(1000000000, 9999999999),
+                'name' => $request->input('name'),
+                'status' => $request->input('status'),
+            ]);
+
+            if ($response->successful()) {
+                return redirect()->route('pets.index')->with('success', 'The pet has been added!');
+            } else {
+                return back()->withErrors(['error' => 'Failed to add pet: ' . $response->body()]);
+            }
+
+            return redirect()->back()->withErrors('An error occurred while adding the pet.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'An error occurred: ' . $e->getMessage()]);
+        }
     }
+
 
     public function edit($id) {
         $pet = $this->petService->getPet($id);
