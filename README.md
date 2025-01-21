@@ -23,7 +23,8 @@ Displaying the list of pets in a user-friendly manner.
 - List of pets: `/pets`
 - Pet details: `/pets/{id}`
 - Create new pet: `/pets/create`
+- Edit pet: `/pets/{id}/edit`
 
-Note: Replace `{id}` in the pet details URL with the actual ID of the pet you want to view. For example: `/pets/9223372016900015388`
+Note: Replace `{id}` in the pet details and edit URLs with the actual ID of the pet you want to view or edit. For example: `/pets/9223372016900015388` or `/pets/9223372016900015388/edit`
 
-To add a new pet, navigate to `/pets/create` and fill out the form with the pet's details.
+To edit an existing pet, navigate to `/pets/{id}/edit` where `{id}` is the ID of the pet you want to modify. You can also access the edit page from the pets list or the pet details page.
