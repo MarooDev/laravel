@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\PetService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PetController extends Controller {
     protected $petService;
@@ -17,10 +18,24 @@ class PetController extends Controller {
         return view('pets.index', compact('pets'));
     }
 
-    public function show($id) {
-        $pet = $this->petService->getPet($id);
-        return view('pets.show', compact('pet'));
+    public function show($id)
+    {
+        try {
+            $response = Http::get("https://petstore.swagger.io/v2/pet/{$id}");
+
+            if ($response->successful()) {
+                $pet = $response->json();
+                return view('pets.show', compact('pet'));
+            } else {
+                return back()->with('error', 'The animal with the given ID was not found.');
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'An error occurred while retrieving the data: ' . $e->getMessage());
+        }
     }
+
+
+
 
     public function create() {
         return view('pets.create');

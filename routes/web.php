@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::resource('pets', PetController::class);
+Route::get('/pets/{id}', [PetController::class, 'show'])->name('pets.show');
+

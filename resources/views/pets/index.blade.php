@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Lista zwierząt</h1>
+    <h1>List of pets</h1>
     <ul>
         @foreach($pets as $pet)
-            <li>{{ isset($pet['name']) ? $pet['name'] : 'Brak nazwy' }} - <a href="{{ route('pets.show', $pet['id']) }}">Szczegóły</a></li>
+            <li>{{ isset($pet['name']) ? $pet['name'] : 'No name' }} - <a href="{{ route('pets.show', $pet['id']) }}">Details</a></li>
         @endforeach
     </ul>
 @endsection
